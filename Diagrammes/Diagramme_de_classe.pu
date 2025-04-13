@@ -1,0 +1,100 @@
+@startuml
+
+abstract class Utilisateur {
+ 
+  - nom : String
+  - prénom : String
+  - email : String
+  - motDePasse : String
+}
+
+class Client {
+  + id_client : Int <<PK>>
+}
+
+class Administrateur {
+  + id_admin : Int <<PK>>
+}
+
+Utilisateur <|-- Client
+Utilisateur <|-- Administrateur
+Client <|-- Administrateur
+
+class Film {
+  + id_film : Int <<PK>>
+  - titre : String
+  - genre : String
+  - durée : Int
+  - résumé : String
+}
+
+class Réservation {
+  + id_reservation : Int <<PK>>
+  - dateReservation : Date
+  - statut : String
+}
+
+class Paiement {
+  + id_paiement : Int <<PK>>
+  - montant : Float
+  - statut : String
+}
+
+class Salle {
+  + numeroSalle : Int <<PK>>
+  - nom : String
+  - capacité : Int
+}
+
+class Séance {
+  + id_seance : Int <<PK>>
+  - date : Date
+  - heure : Time
+  - langue : String
+}
+
+class Billet {
+  + numero_billet : String <<PK>>
+  - codeQR : String
+  - estValide : Bool
+}
+
+class Siège {
+  + numero_siege : String <<PK>>
+  - état : String
+}
+
+class Notification {
+  + id_notification : Int <<PK>>
+  - type : String
+  - dateEnvoi : Date
+}
+
+class ListeÀVoir {
+  - dateAjout : Date
+}
+
+' Associations principales
+
+Client "1" -- "0..*" Réservation
+Réservation -- "1" Film
+
+Client "1" -- "0..*" Paiement
+Paiement -- "1" Réservation
+
+Réservation --> "1..*" Billet : génère
+Réservation --> "1" Séance : concerne
+Billet --> "1" Client : estUtiliséPar
+Billet --> "1..*" Siège : contient
+Séance --> "1" Film : projette
+Séance --> "1" Salle : aLieuDans
+Salle --> "1..*" Siège : contient
+Client --> "0..*" Notification : reçoit
+Notification --> "0..1" Billet : envoie
+Client --> "0..*" ListeÀVoir : compose
+ListeÀVoir --> "1" Film : référence
+Administrateur --> "0..*" Film : gère
+Administrateur --> "0..*" Salle : gère
+Administrateur --> "0..*" Séance : programme
+
+@enduml
