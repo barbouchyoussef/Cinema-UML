@@ -216,7 +216,9 @@ postconditions
 
 **Date :** 18/04/2025  
 
-## 1 Diagramme de classes (raffiné) (voir diagramme_de_classes.png)
+## 1 Diagramme de classes (premier raffinement) 
+![Diagramme de classes](Diagrammes/diagramme_de_classes(premier_raffinnement).png)
+
 ## 2. Cycle de vie des objets : Diagramme d'états-transitions (`Réservation`)
 
 Dans cette section, nous avons modélisé le cycle de vie des objets de la classe `Réservation` à l'aide d'un **diagramme de machines à états (aussi appelé diagramme états-transitions)**.
@@ -250,3 +252,55 @@ Représenter de manière claire le comportement dynamique d’un objet `Réserva
 - `supprimerReservation` : transition vers la destruction de l’objet
 
 ![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions.png)
+
+ ### 3. 2ème raffinement 
+### 3.1 Traduire les associations en attributs dans les classes concernées 
+
+Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les associations sous forme d’attributs, afin de faciliter la programmation orientée objet.
+
+####  Principes appliqués :
+
+- **Association unidirectionnelle** : l’attribut est placé uniquement du **côté de la flèche**, vers la classe cible.
+- **Association binaire (1:1 ou 1:N)** : traduite par **un seul attribut** dans la classe source.
+- Le **nom de l’attribut** correspond à celui du rôle ou à la **forme nominale** du nom de l’association.
+- La **multiplicité** est traduite par :
+  - `1` → un objet de type `Classe`
+  - `0..N` ou `*` → une **collection** de type `List<Classe>` ou `Set<Classe>`
+
+####  Exemples concrets dans notre projet (selon le modèle UML final) :
+
+| Classe source      | Association                                | Attribut ajouté                                     |
+|--------------------|---------------------------------------------|-----------------------------------------------------|
+| `Cinema`           | `0..*` Salle                                | `- salles : List<Salle>`                            |
+| `Cinema`           | `0..*` Film                                 | `- films : List<Film>`                              |
+| `Cinema`           | `0..*` Séance                               | `- seances : List<Séance>`                          |
+| `Cinema`           | `0..*` Utilisateur                          | `- utilisateurs : List<Utilisateur>`                |
+| `Client`           | `0..*` Réservation                          | `- reservations : List<Reservation>`                |
+| `Client`           | `0..*` Paiement                             | `- paiements : List<Paiement>`                      |
+| `Client`           | `0..*` Notification                         | `- notifications : List<Notification>`              |
+| `Administrateur`   | `0..*` Film                                 | `- filmsGeres : List<Film>`                         |
+| `Administrateur`   | `0..*` Salle                                | `- sallesGerees : List<Salle>`                      |
+| `Administrateur`   | `0..*` Séance                               | `- seancesProgrammees : List<Séance>`               |
+| `Réservation`      | `1` Film                                    | `- film : Film`                                     |
+| `Réservation`      | `1` Séance                                  | `- seance : Séance`                                 |
+| `Réservation`      | `1..*` Billet                               | `- billets : List<Billet>`                          |
+| `Paiement`         | `1` Réservation                             | `- reservation : Réservation`                       |
+| `Salle`            | `0..*` Siège                                | `- sieges : List<Siège>`                            |
+| `Salle`            | `0..*` Séance                               | `- seances : List<Séance>`                          |
+| `Séance`           | `1` Film                                    | `- film : Film`                                     |
+| `Séance`           | `1` Salle                                   | `- salle : Salle`                                   |
+| `Billet`           | `1` Client                                  | `- client : Client`                                 |
+| `Billet`           | `1..*` Siège                                | `- sieges : List<Siège>`                            |
+| `Notification`     | `0..1` Billet                               | `- billet : Billet`                                 |
+
+####  Choix des structures de données :
+
+Pour les collections (`0..*`), nous avons utilisé principalement :
+- `List<...>` quand l’ordre est important (ex : billets, notifications)
+- `Set<...>` pourrait être utilisé si l’unicité est nécessaire (optionnel ici)
+
+Ce raffinement permet d’intégrer facilement ces relations dans le code orienté objet, tout en respectant la logique du système métier.
+
+##  Diagramme de classes (deuxième raffinement) 
+
+![Diagramme de classes](Diagrammes/diagramme_de_classes(deuxième_raffinnement).png)
