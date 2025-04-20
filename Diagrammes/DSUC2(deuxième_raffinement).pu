@@ -8,9 +8,26 @@ participant BaseDeDonnées
 participant ServicePaiement
 participant ServiceNotification
 
+note left of Client
+réserverFilm(c:Client, f:Film, s:Séance, sièges:List<Siège>) {
+  sélection = c.sélectionnerFilmEtSéance();                          // 1
+  r = new Réservation(f, s, sièges);                                 // 2
+  if (!BaseDeDonnées.siegesDisponibles(s, sièges)) return;           // 3
+  if (!BaseDeDonnées.seanceEstValide(s)) return;                     // 4
+  BaseDeDonnées.enregistrerReservation(r);                           // 5
+  BaseDeDonnées.marquerSiegesCommeReserves(s, sièges);               // 6
+  billets = BaseDeDonnées.genererBillets(r);                         // 7
+  r.setBillets(billets);
+  ServicePaiement.initierPaiement(r);                                // 8
+  infosClient = BaseDeDonnées.getClient(c.id);                       // 9
+  ServiceNotification.creerNotification("Réservation confirmée", infosClient); // 10
+  InterfaceClient.afficherMessage("Réservation confirmée !");       // 11
+}
+end note
+
 Client -> InterfaceClient : sélectionner film, séance, sièges
 InterfaceClient -> ControleurReservation : envoyer infos réservation
-ControleurReservation -> ServiceReservation : créerRéservation(film, séance, sièges)
+ControleurReservation -> ServiceReservation : créerRéservation(f, s, sièges)
 
 alt Vérifications
     ServiceReservation -> BaseDeDonnées : vérifier disponibilité sièges

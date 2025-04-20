@@ -331,3 +331,16 @@ Conformément aux règles de modélisation enseignées, nous avons raffiné notr
 ##  Diagramme de classes (deuxième raffinement) 
 
 ![Diagramme de classes](Diagrammes/diagramme_de_classe(deuxième_raffinnement).png)
+
+### 3.3.1 Traduction du diagramme de séquence en algorithmes
+
+### Diagramme de séquence DSUC1
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1(deuxième_raffinement).png)
+
+### Diagramme de séquence DSUC2
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2(deuxième_raffinement).png)
+
+
+
+
+

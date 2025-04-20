@@ -1,0 +1,81 @@
+@startuml
+actor Administrateur
+participant "InterfaceAdmin" as UI
+participant "ContrôleurFilm" as Controller
+participant "ServiceFilm" as Service
+participant "BaseDeDonnées" as DB
+participant "ServiceNotification" as Notification
+participant "BaseUtilisateurs" as UsersDB
+
+note left of Administrateur
+ajouterFilm(admin:Administrateur, f:Film) {
+  // 1. L’admin saisit les données du film via l’interface
+  UI.saisirDonneesFilm(f);
+
+  // 2. L’interface transmet les données au contrôleur
+  Controller.recevoirFilm(f);
+
+  // 3. Le service vérifie les préconditions
+  if (!Service.champsValides(f)) {
+    Controller.signalerErreur("Champs invalides");
+    UI.afficherMessage("Échec ajout film");
+    return;
+  }
+
+  // 4. Le service vérifie si le film existe déjà (code)
+  if (DB.existeFilm(f.code)) {
+    Controller.signalerErreur("Film déjà existant");
+    UI.afficherMessage("Film non ajouté");
+    return;
+  }
+
+  // 5. Insertion du film en base de données
+  DB.insererFilm(f);
+
+  // 6. Création et envoi de notifications
+  utilisateurs = UsersDB.recupererTous();
+  for (u : utilisateurs) {
+    Notification.enregistrerNotification(u, "Nouveau film disponible");
+  }
+
+  // 7. Retour succès
+  Controller.retourSucces();
+  UI.afficherMessage("Film ajouté + notifications envoyées");
+}
+end note
+
+Administrateur -> UI : saisir données film (titre, durée, genre, réalisateur, code)
+UI -> Controller : soumettre nouveau film
+Controller -> Service : valider et ajouter film
+
+alt Préconditions non respectées
+    Service -> Controller : erreur de validation (champ vide ou mal formé)
+    Controller -> UI : afficher message d'erreur
+    UI -> Administrateur : échec ajout film
+else Préconditions OK
+    Service -> DB : vérifier doublon (par code)
+    DB --> Service : film existant ? (false)
+
+    alt Film inexistant
+        Service -> DB : insérer film
+        DB --> Service : confirmation insertion
+
+        Service -> Notification : créer notification (nouveau film)
+        Notification -> UsersDB : récupérer tous les utilisateurs
+        UsersDB --> Notification : liste utilisateurs
+
+        loop pour chaque utilisateur
+            Notification -> UsersDB : enregistrer notification
+        end
+
+        Notification --> Service : notifications envoyées
+        Service -> Controller : succès ajout film
+        Controller -> UI : afficher message succès
+        UI -> Administrateur : film ajouté + notifications envoyées
+    else Film déjà existant
+        Service -> Controller : erreur : doublon
+        Controller -> UI : afficher message erreur
+        UI -> Administrateur : film non ajouté
+    end
+end
+@enduml
