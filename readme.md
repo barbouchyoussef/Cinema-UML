@@ -173,3 +173,40 @@ postconditions
 ![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1.png)
 
 
+
+### 2.b Diagramme de séquence – DSUC2 : Réserver un film
+
+- **Nom du cas d’utilisation :** Réserver un film  
+- **Acteur principal :** Client  
+- **But :** Permettre au client de réserver une ou plusieurs places pour une séance de film
+
+####  Préconditions :
+
+- Le client est authentifié.
+- Le film sélectionné existe et est bien programmé.
+- La séance choisie est encore à venir.
+- Il reste des places disponibles pour la séance.
+
+####  Postconditions :
+
+- La réservation est enregistrée dans le système.
+- Les sièges sont marqués comme réservés.
+- Un ou plusieurs billets sont générés.
+- Une notification est envoyée au client.
+- Le paiement est déclenché ou prêt à être effectué.
+
+---
+
+###  Algorithme en langage naturel
+
+1. Le client sélectionne un film, une séance et les sièges souhaités.
+2. L’interface transmet les informations au contrôleur.
+3. Le contrôleur transmet les données au service de réservation.
+4. Le service vérifie les préconditions 
+5. Si une précondition n’est pas respectée → échec avec message d’erreur.
+6. Si tout est correct → reservation du film.
+7. Un message de confirmation est affiché au client.
+
+### Diagramme de séquence DSUC1
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2.png)
+
