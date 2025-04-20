@@ -1,12 +1,7 @@
 @startuml
 
-' Définition des classes principales
-
-class Cinema {
-  + nom : String
-}
-
 abstract class Utilisateur {
+ 
   - nom : String
   - prénom : String
   - email : String
@@ -75,38 +70,29 @@ class Notification {
   - dateEnvoi : Date
 }
 
-' Relations entre les classes
+class ListeÀVoir {
+  - dateAjout : Date
+}
 
-' Agrégation des éléments dans le Cinema
-Cinema "1" o-- "0..*" Salle 
-Cinema "1" o-- "0..*" Film 
-Cinema "1" o-- "0..*" Séance 
-Cinema "1" o-- "0..*" Utilisateur 
+' Associations principales
 
-' Relations entre Salle et autres classes
-Salle "1" o-- "0..*" Siège : contient
-Salle "1" -- "0..*" Séance : aLieuDans
-
-' Relations entre Client et Réservation
 Client "1" -- "0..*" Réservation
 Réservation -- "1" Film
 
-' Relations entre Paiement et Réservation
 Client "1" -- "0..*" Paiement
 Paiement -- "1" Réservation
 
-' Relations entre Réservation, Billet et Séance
 Réservation --> "1..*" Billet : génère
 Réservation --> "1" Séance : concerne
 Billet --> "1" Client : estUtiliséPar
 Billet --> "1..*" Siège : contient
-
-' Relations entre Séance, Film, et Notification
 Séance --> "1" Film : projette
+Séance --> "1" Salle : aLieuDans
+Salle --> "1..*" Siège : contient
 Client --> "0..*" Notification : reçoit
 Notification --> "0..1" Billet : envoie
-
-' Relations entre Administrateur et gestion des entités
+Client --> "0..*" ListeÀVoir : compose
+ListeÀVoir --> "1" Film : référence
 Administrateur --> "0..*" Film : gère
 Administrateur --> "0..*" Salle : gère
 Administrateur --> "0..*" Séance : programme
