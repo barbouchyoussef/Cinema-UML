@@ -211,3 +211,42 @@ postconditions
 ![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2.png)
 
 
+# Conception Préliminaire– Rendu 3
+
+
+**Date :** 18/04/2025  
+
+## 1 Diagramme de classes (raffiné) (voir diagramme_de_classes.png)
+## 2. Cycle de vie des objets : Diagramme d'états-transitions (`Réservation`)
+
+Dans cette section, nous avons modélisé le cycle de vie des objets de la classe `Réservation` à l'aide d'un **diagramme de machines à états (aussi appelé diagramme états-transitions)**.
+
+Ce diagramme représente les différentes **étapes d’évolution** d’une réservation, de sa création à sa suppression, en passant par des états comme la confirmation ou l’annulation.
+
+###  Objectif
+
+Représenter de manière claire le comportement dynamique d’un objet `Réservation`, en précisant :
+- Les **états** qu’il peut prendre
+- Les **événements** déclencheurs
+- Les **conditions** nécessaires pour effectuer une transition
+- Les **actions** déclenchées lors des transitions ou à l’entrée/sortie des états
+
+###  États modélisés
+
+- `EnConstruction` : l’objet est instancié mais pas encore complet
+- `EnAttentePaiement` : la réservation est en attente d’un paiement
+- `Confirmée` : la réservation est validée après paiement
+- `Annulée` : la réservation a été annulée par le client ou le système
+- `Expirée` : délai de paiement dépassé
+- `EnDestruction` : état final avant la suppression de l’objet
+
+###  Transitions clés
+
+- `initier` : commence la création d’une réservation
+- `confirmerCreation` : finalise l’étape de création
+- `paiementEffectue` : confirme la réservation si paiement accepté
+- `clientAnnule` : déclenche l’annulation si la réservation est encore en attente
+- `delaiDepasse` : déclenche une expiration automatique après un certain temps
+- `supprimerReservation` : transition vers la destruction de l’objet
+
+![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions.png)
