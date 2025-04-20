@@ -9,6 +9,14 @@ class Cinema {
   - seances : List<Séance>
   - utilisateurs : List<Utilisateur>
 }
+note right of Cinema
+constructeur() {
+  création des objets Salle, Film, Séance, Utilisateur
+}
+destructeur() {
+  destruction des objets Salle, Film, Séance, Utilisateur
+}
+end note
 
 abstract class Utilisateur {
   # nom : String
@@ -88,13 +96,27 @@ class Réservation {
   - film : Film
   - seance : Séance
   - billets : List<Billet>
+
++ Réservation(id_reservation : int, dateReservation : Date, statut : String)
+  + getIdReservation() : int
+  + getDateReservation() : Date
+  + getStatut() : String
+  + setDateReservation(d : Date) : void
+  + setStatut(s : String) : void
 }
 
 class Paiement {
-  - id_paiement : int <<PK>>
+  - id_paiement : int <<PK>>    
   - montant : float
   - statut : String
   - reservation : Réservation
+
++ Paiement(id_paiement : int, montant : float, statut : String)
+  + getIdPaiement() : int
+  + getMontant() : float
+  + getStatut() : String
+  + setMontant(m : float) : void
+  + setStatut(s : String) : void
 }
 
 class Salle {
@@ -103,7 +125,22 @@ class Salle {
   - capacite : int
   - sieges : List<Siège>
   - seances : List<Séance>
+
++ Salle(numeroSalle : int, nom : String, capacite : int)
+  + getNumeroSalle() : int
+  + getNom() : String
+  + getCapacite() : int
+  + setNom(n : String) : void
+  + setCapacite(c : int) : void
 }
+note right of Salle
+constructeur() {
+  création des objets Siège
+}
+destructeur() {
+  destruction des objets Siège
+}
+end note
 
 class Séance {
   - id_seance : int <<PK>>
@@ -112,6 +149,15 @@ class Séance {
   - langue : String
   - salle : Salle
   - film : Film
+
++ Séance(id_seance : int, date : Date, heure : Time, langue : String)
+  + getIdSeance() : int
+  + getDate() : Date
+  + getHeure() : Time
+  + getLangue() : String
+  + setDate(d : Date) : void
+  + setHeure(h : Time) : void
+  + setLangue(l : String) : void
 }
 
 class Billet {
@@ -120,11 +166,22 @@ class Billet {
   - estValide : boolean
   - client : Client
   - sieges : List<Siège>
+  + Billet(numero_billet : String, codeQR : String, estValide : boolean)
+  + getNumeroBillet() : String
+  + getCodeQR() : String
+  + getEstValide() : boolean
+  + setCodeQR(c : String) : void
+  + setEstValide(v : boolean) : void
 }
 
 class Siège {
   - numero_siege : String <<PK>>
   - etat : String
+
+  + Siège(numero_siege : String, etat : String)
+  + getNumeroSiege() : String
+  + getEtat() : String
+  + setEtat(e : String) : void
 }
 
 class Notification {
@@ -132,6 +189,13 @@ class Notification {
   - type : String
   - dateEnvoi : Date
   - billet : Billet
+
++ Notification(id_notification : int, type : String, dateEnvoi : Date)
+  + getIdNotification() : int
+  + getType() : String
+  + getDateEnvoi() : Date
+  + setType(t : String) : void
+  + setDateEnvoi(d : Date) : void
 }
 
 ' Relations entre les classes

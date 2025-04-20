@@ -300,7 +300,34 @@ Pour les collections (`0..*`), nous avons utilisé principalement :
 - `Set<...>` pourrait être utilisé si l’unicité est nécessaire (optionnel ici)
 
 Ce raffinement permet d’intégrer facilement ces relations dans le code orienté objet, tout en respectant la logique du système métier.
+### 3.2 Traduction des agrégations / compositions
+
+Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les agrégations et compositions en attributs, tout en tenant compte du **cycle de vie des objets composés**.
+
+#### Distinction :
+
+- **Agrégation** : simple association « fait partie de » sans lien de vie fort
+- **Composition** : le composant **n’existe pas sans son conteneur**, et il est **créé/détruit avec lui**
+
+#### Règles appliquées :
+
+- Même traduction qu’une association simple (→ attribut)
+- Mais avec une **gestion stricte du cycle de vie**
+  - Le composant est **créé dans le constructeur**
+  - Et **détruit automatiquement avec l’objet parent**
+
+#### Exemples dans notre projet :
+
+| Classe composante | Classe propriétaire     | Relation    | Traduction en attribut + remarque                    |
+|-------------------|--------------------------|-------------|------------------------------------------------------|
+| `Siège`           | `Salle`                  | Composition `*--` | `- sieges : List<Siège>` → les sièges sont créés avec la salle et détruits avec elle |
+| `Salle`           | `Cinema`                 | Composition `*--` | `- salles : List<Salle>` → une salle n’existe que dans un cinéma |
+| `Séance`          | `Cinema`                 | Composition `*--` | `- seances : List<Séance>` → les séances sont gérées localement par un cinéma |
+| `Utilisateur`     | `Cinema`                 | Composition `*--` | `- utilisateurs : List<Utilisateur>` → tous les utilisateurs appartiennent à un cinéma |
+
+
+
 
 ##  Diagramme de classes (deuxième raffinement) 
 
-![Diagramme de classes](Diagrammes/diagramme_de_classes(deuxième_raffinnement).png)
+![Diagramme de classes](Diagrammes/diagramme_de_classe(deuxième_raffinnement).png)
