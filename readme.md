@@ -47,7 +47,7 @@ Le projet consiste en la mise en place d’une billetterie en ligne pour un cin�
 ![Cas d'utilisation](Diagrammes/Diagramme_de_cas_d'utilisation.png)
 
 ### Priorités des cas d’utilisation
-Nous avons choisi le cas d'utilisation "Ajouter un film à la collection" pour le sprint 1 car il constitue la fonctionnalité de base nécessaire pour gérer et structurer efficacement les films dans le système.
+Nous avons choisi les cas d'utilisation "Ajouter un film à la collection" (fonctionnalité principale de l'administrateur) et "Réserver un film" (fonctionnalité principale du client) pour le sprint 1 car ils constituent les fonctionnalités de base nécessaires pour gérer et structurer efficacement les films dans le système.
 
 # Table de décision – Ajouter un film à la collection
 précondition :
@@ -68,6 +68,40 @@ postcondition :
 | film avec ce code inexistant dans la collection |    |    |    |    | T  |
 | film avec ce code existant                     | F  | F  | F  | F  | T  |
 | nombre de tests dans le jeu de tests            | 2  | 2  | 2  | 1  | 1  |
+
+
+###  Table de décision – Réserver un film
+
+préconditions
+
+^ Le client est authentifié.  
+^ Le film sélectionné existe et est bien programmé.  
+^ La séance choisie est encore à venir.  
+^ Il reste des places disponibles pour la séance.
+
+postconditions
+
+^ La réservation est enregistrée dans le système.  
+^ Les sièges sont marqués comme réservés.  
+^ Un ou plusieurs billets sont générés.  
+^ Une notification est envoyée au client.  
+^ Le paiement est déclenché ou prêt à être effectué.
+
+
+
+|                                                           | 1  | 2  | 3  | 4  | 5  |
+|-----------------------------------------------------------|----|----|----|----|----|
+| Le client est authentifié                                 | F  | T  | T  | T  | T  |
+| Le film existe et est programmé                           | —  | F  | T  | T  | T  |
+| La séance est à venir                                     | —  | —  | F  | T  | T  |
+| Des places sont disponibles                               | —  | —  | —  | F  | T  |
+| **Réservation enregistrée**                               | F  | F  | F  | F  | T  |
+| **Sièges réservés**                                       | F  | F  | F  | F  | T  |
+| **Billets générés**                                       | F  | F  | F  | F  | T  |
+| **Notification envoyée au client**                        | F  | F  | F  | F  | T  |
+| **Paiement déclenché ou prêt à être effectué**            | F  | F  | F  | F  | T  |
+| **Nombre de tests dans le jeu de tests**                  | 2  | 2  | 2  | 2  | 1  |
+
 
 # Conception Préliminaire– Rendu 2
 
