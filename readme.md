@@ -47,7 +47,7 @@ Le projet consiste en la mise en place d’une billetterie en ligne pour un cin�
 ![Cas d'utilisation](Diagrammes/Diagramme_de_cas_d'utilisation.png)
 
 ### Priorités des cas d’utilisation
-Nous avons choisi le cas d'utilisation "Ajouter un film à la collection" pour le sprint 1 car il constitue la fonctionnalité de base nécessaire pour gérer et structurer efficacement les films dans le système.
+Nous avons choisi les cas d'utilisation "Ajouter un film à la collection" (fonctionnalité principale de l'administrateur) et "Réserver un film" (fonctionnalité principale du client) pour le sprint 1 car ils constituent les fonctionnalités de base nécessaires pour gérer et structurer efficacement les films dans le système.
 
 # Table de décision – Ajouter un film à la collection
 précondition :
@@ -68,6 +68,40 @@ postcondition :
 | film avec ce code inexistant dans la collection |    |    |    |    | T  |
 | film avec ce code existant                     | F  | F  | F  | F  | T  |
 | nombre de tests dans le jeu de tests            | 2  | 2  | 2  | 1  | 1  |
+
+
+###  Table de décision – Réserver un film
+
+préconditions
+
+^ Le client est authentifié.  
+^ Le film sélectionné existe et est bien programmé.  
+^ La séance choisie est encore à venir.  
+^ Il reste des places disponibles pour la séance.
+
+postconditions
+
+^ La réservation est enregistrée dans le système.  
+^ Les sièges sont marqués comme réservés.  
+^ Un ou plusieurs billets sont générés.  
+^ Une notification est envoyée au client.  
+^ Le paiement est déclenché ou prêt à être effectué.
+
+
+
+|                                                           | 1  | 2  | 3  | 4  | 5  |
+|-----------------------------------------------------------|----|----|----|----|----|
+| Le client est authentifié                                 | F  | T  | T  | T  | T  |
+| Le film existe et est programmé                           | —  | F  | T  | T  | T  |
+| La séance est à venir                                     | —  | —  | F  | T  | T  |
+| Des places sont disponibles                               | —  | —  | —  | F  | T  |
+| **Réservation enregistrée**                               | F  | F  | F  | F  | T  |
+| **Sièges réservés**                                       | F  | F  | F  | F  | T  |
+| **Billets générés**                                       | F  | F  | F  | F  | T  |
+| **Notification envoyée au client**                        | F  | F  | F  | F  | T  |
+| **Paiement déclenché ou prêt à être effectué**            | F  | F  | F  | F  | T  |
+| **Nombre de tests dans le jeu de tests**                  | 2  | 2  | 2  | 2  | 1  |
+
 
 # Conception Préliminaire– Rendu 2
 
@@ -97,8 +131,8 @@ postcondition :
 
 ---
 
-### 1.b Diagramme de classes
-![Diagramme de classes](Diagrammes/diagramme_de_classe.png)
+### 1.b Diagramme de classes (initial)
+![Diagramme de classes](Diagrammes/diagramme_de_classes.png)
 
 
 ## 2) Aspects dynamiques
@@ -137,5 +171,197 @@ postcondition :
 
 ### Diagramme de séquence DSUC1
 ![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1.png)
+
+
+
+### 2.b Diagramme de séquence – DSUC2 : Réserver un film
+
+- **Nom du cas d’utilisation :** Réserver un film  
+- **Acteur principal :** Client  
+- **But :** Permettre au client de réserver une ou plusieurs places pour une séance de film
+
+####  Préconditions :
+
+- Le client est authentifié.
+- Le film sélectionné existe et est bien programmé.
+- La séance choisie est encore à venir.
+- Il reste des places disponibles pour la séance.
+
+####  Postconditions :
+
+- La réservation est enregistrée dans le système.
+- Les sièges sont marqués comme réservés.
+- Un ou plusieurs billets sont générés.
+- Une notification est envoyée au client.
+- Le paiement est déclenché ou prêt à être effectué.
+
+---
+
+###  Algorithme en langage naturel
+
+1. Le client sélectionne un film, une séance et les sièges souhaités.
+2. L’interface transmet les informations au contrôleur.
+3. Le contrôleur transmet les données au service de réservation.
+4. Le service vérifie les préconditions 
+5. Si une précondition n’est pas respectée → échec avec message d’erreur.
+6. Si tout est correct → reservation du film.
+7. Un message de confirmation est affiché au client.
+
+### Diagramme de séquence DSUC2
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2.png)
+
+
+# Conception Préliminaire– Rendu 3
+
+
+**Date :** 18/04/2025  
+
+## 1 Diagramme de classes (premier raffinement) 
+![Diagramme de classes](Diagrammes/diagramme_de_classes(premier_raffinnement).png)
+
+## 2. Cycle de vie des objets : Diagramme d'états-transitions (`Réservation`)
+
+Dans cette section, nous avons modélisé le cycle de vie des objets de la classe `Réservation` à l'aide d'un **diagramme de machines à états (aussi appelé diagramme états-transitions)**.
+
+Ce diagramme représente les différentes **étapes d’évolution** d’une réservation, de sa création à sa suppression, en passant par des états comme la confirmation ou l’annulation.
+
+###  Objectif
+
+Représenter de manière claire le comportement dynamique d’un objet `Réservation`, en précisant :
+- Les **états** qu’il peut prendre
+- Les **événements** déclencheurs
+- Les **conditions** nécessaires pour effectuer une transition
+- Les **actions** déclenchées lors des transitions ou à l’entrée/sortie des états
+
+###  États modélisés
+
+- `EnConstruction` : l’objet est instancié mais pas encore complet
+- `EnAttentePaiement` : la réservation est en attente d’un paiement
+- `Confirmée` : la réservation est validée après paiement
+- `Annulée` : la réservation a été annulée par le client ou le système
+- `Expirée` : délai de paiement dépassé
+- `EnDestruction` : état final avant la suppression de l’objet
+
+###  Transitions clés
+
+- `initier` : commence la création d’une réservation
+- `confirmerCreation` : finalise l’étape de création
+- `paiementEffectue` : confirme la réservation si paiement accepté
+- `clientAnnule` : déclenche l’annulation si la réservation est encore en attente
+- `delaiDepasse` : déclenche une expiration automatique après un certain temps
+- `supprimerReservation` : transition vers la destruction de l’objet
+
+![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions.png)
+
+ ### 3. 2ème raffinement 
+### 3.1 Traduire les associations en attributs dans les classes concernées 
+
+Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les associations sous forme d’attributs, afin de faciliter la programmation orientée objet.
+
+####  Principes appliqués :
+
+- **Association unidirectionnelle** : l’attribut est placé uniquement du **côté de la flèche**, vers la classe cible.
+- **Association binaire (1:1 ou 1:N)** : traduite par **un seul attribut** dans la classe source.
+- Le **nom de l’attribut** correspond à celui du rôle ou à la **forme nominale** du nom de l’association.
+- La **multiplicité** est traduite par :
+  - `1` → un objet de type `Classe`
+  - `0..N` ou `*` → une **collection** de type `List<Classe>` ou `Set<Classe>`
+
+####  Exemples concrets dans notre projet (selon le modèle UML final) :
+
+| Classe source      | Association                                | Attribut ajouté                                     |
+|--------------------|---------------------------------------------|-----------------------------------------------------|
+| `Cinema`           | `0..*` Salle                                | `- salles : List<Salle>`                            |
+| `Cinema`           | `0..*` Film                                 | `- films : List<Film>`                              |
+| `Cinema`           | `0..*` Séance                               | `- seances : List<Séance>`                          |
+| `Cinema`           | `0..*` Utilisateur                          | `- utilisateurs : List<Utilisateur>`                |
+| `Client`           | `0..*` Réservation                          | `- reservations : List<Reservation>`                |
+| `Client`           | `0..*` Paiement                             | `- paiements : List<Paiement>`                      |
+| `Client`           | `0..*` Notification                         | `- notifications : List<Notification>`              |
+| `Administrateur`   | `0..*` Film                                 | `- filmsGeres : List<Film>`                         |
+| `Administrateur`   | `0..*` Salle                                | `- sallesGerees : List<Salle>`                      |
+| `Administrateur`   | `0..*` Séance                               | `- seancesProgrammees : List<Séance>`               |
+| `Réservation`      | `1` Film                                    | `- film : Film`                                     |
+| `Réservation`      | `1` Séance                                  | `- seance : Séance`                                 |
+| `Réservation`      | `1..*` Billet                               | `- billets : List<Billet>`                          |
+| `Paiement`         | `1` Réservation                             | `- reservation : Réservation`                       |
+| `Salle`            | `0..*` Siège                                | `- sieges : List<Siège>`                            |
+| `Salle`            | `0..*` Séance                               | `- seances : List<Séance>`                          |
+| `Séance`           | `1` Film                                    | `- film : Film`                                     |
+| `Séance`           | `1` Salle                                   | `- salle : Salle`                                   |
+| `Billet`           | `1` Client                                  | `- client : Client`                                 |
+| `Billet`           | `1..*` Siège                                | `- sieges : List<Siège>`                            |
+| `Notification`     | `0..1` Billet                               | `- billet : Billet`                                 |
+
+####  Choix des structures de données :
+
+Pour les collections (`0..*`), nous avons utilisé principalement :
+- `List<...>` quand l’ordre est important (ex : billets, notifications)
+- `Set<...>` pourrait être utilisé si l’unicité est nécessaire (optionnel ici)
+
+Ce raffinement permet d’intégrer facilement ces relations dans le code orienté objet, tout en respectant la logique du système métier.
+### 3.2 Traduction des agrégations / compositions
+
+Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les agrégations et compositions en attributs, tout en tenant compte du **cycle de vie des objets composés**.
+
+#### Distinction :
+
+- **Agrégation** : simple association « fait partie de » sans lien de vie fort
+- **Composition** : le composant **n’existe pas sans son conteneur**, et il est **créé/détruit avec lui**
+
+#### Règles appliquées :
+
+- Même traduction qu’une association simple (→ attribut)
+- Mais avec une **gestion stricte du cycle de vie**
+  - Le composant est **créé dans le constructeur**
+  - Et **détruit automatiquement avec l’objet parent**
+
+#### Exemples dans notre projet :
+
+| Classe composante | Classe propriétaire     | Relation    | Traduction en attribut + remarque                    |
+|-------------------|--------------------------|-------------|------------------------------------------------------|
+| `Siège`           | `Salle`                  | Composition `*--` | `- sieges : List<Siège>` → les sièges sont créés avec la salle et détruits avec elle |
+| `Salle`           | `Cinema`                 | Composition `*--` | `- salles : List<Salle>` → une salle n’existe que dans un cinéma |
+| `Séance`          | `Cinema`                 | Composition `*--` | `- seances : List<Séance>` → les séances sont gérées localement par un cinéma |
+| `Utilisateur`     | `Cinema`                 | Composition `*--` | `- utilisateurs : List<Utilisateur>` → tous les utilisateurs appartiennent à un cinéma |
+
+
+
+
+##  Diagramme de classes (deuxième raffinement) 
+
+![Diagramme de classes](Diagrammes/diagramme_de_classe(deuxième_raffinnement).png)
+
+### 3.3.1 Traduction du diagramme de séquence en algorithmes
+
+### Diagramme de séquence DSUC1
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1(deuxième_raffinement).png)
+
+### Diagramme de séquence DSUC2
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2(deuxième_raffinement).png)
+
+###  3.3.2 Traduction du diagramme d’états-transitions en algorithmes
+
+Conformément aux recommandations de modélisation, nous avons raffiné le **cycle de vie d'une réservation** à travers un **diagramme d’états-transitions** complet, puis traduit chaque **état** et **transition** en **méthodes algorithmiques** claires.
+
+#### États principaux de l'objet `Réservation`
+
+| État               | Description                                              |
+|--------------------|----------------------------------------------------------|
+| `EnConstruction`   | La réservation est en cours de saisie                   |
+| `EnAttentePaiement`| Réservation créée, en attente du paiement               |
+| `Confirmée`        | Paiement validé, billets générés                        |
+| `Annulée`          | Réservation annulée manuellement                        |
+| `Expirée`          | Réservation expirée faute de paiement dans le délai     |
+| `EnDestruction`    | Réservation supprimée, archivée                         |
+
+---
+## Diagramme d'états-transitions (deuxième raffinement)
+![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions(deuxième_raffinement).png)
+
+
+
+
+
 
 

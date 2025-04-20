@@ -1,0 +1,194 @@
+@startuml
+
+' Définition des classes principales
+
+class Cinema {
+  + nom : String
+}
+
+abstract class Utilisateur {
+  # nom : String
+  # prenom : String
+  # email : String
+  # motDePasse : String
+
+  # Utilisateur(nom : String, prenom : String, email : String, motDePasse : String)
+  + getNom() : String
+  + getPrenom() : String
+  + getEmail() : String
+  + setNom(nom : String) : void
+  + setPrenom(prenom : String) : void
+  + setEmail(email : String) : void
+  + setMotDePasse(mdp : String) : void
+  + authentifier(mdpSaisi : String) : boolean
+  + estValide() : boolean
+  + toString() : String
+}
+
+class Client extends Utilisateur {
+  - id_client : int <<PK>>
+
+  + Client(id_client : int, nom : String, prenom : String, email : String, motDePasse : String)
+  + getIdClient() : int
+  + setIdClient(id : int) : void
+  + reserverSeance(seance : Séance, nbPlaces : int) : Reservation
+  + consulterReservations() : List<Reservation>
+}
+
+class Administrateur extends Utilisateur {
+  - id_admin : int <<PK>>
+
+  + Administrateur(id_admin : int, nom : String, prenom : String, email : String, motDePasse : String)
+  + getIdAdmin() : int
+  + setIdAdmin(id : int) : void
+  + ajouterFilm(film : Film) : void
+  + supprimerFilm(idFilm : int) : void
+  + programmerSeance(seance : Séance) : void
+  + ajouterSalle(salle : Salle) : void
+  + supprimerSalle(numeroSalle : int) : void
+}
+
+Client <|-- Administrateur
+
+class Film {
+  - id_film : int <<PK>>
+  - titre : String
+  - genre : String
+  - duree : int
+  - resume : String
+
+  + Film(id_film : int, titre : String, genre : String, duree : int, resume : String)
+  + getIdFilm() : int
+  + getTitre() : String
+  + getGenre() : String
+  + getDuree() : int
+  + getResume() : String
+  + setTitre(t : String) : void
+  + setGenre(g : String) : void
+  + setDuree(d : int) : void
+  + setResume(r : String) : void
+  + estValide() : boolean
+  + toString() : String
+}
+
+class Réservation {
+  - id_reservation : int <<PK>>
+  - dateReservation : Date
+  - statut : String
+
+  + Réservation(id_reservation : int, dateReservation : Date, statut : String)
+  + getIdReservation() : int
+  + getDateReservation() : Date
+  + getStatut() : String
+  + setDateReservation(d : Date) : void
+  + setStatut(s : String) : void
+}
+
+class Paiement {
+  - id_paiement : int <<PK>>
+  - montant : float
+  - statut : String
+
+  + Paiement(id_paiement : int, montant : float, statut : String)
+  + getIdPaiement() : int
+  + getMontant() : float
+  + getStatut() : String
+  + setMontant(m : float) : void
+  + setStatut(s : String) : void
+}
+
+class Salle {
+  - numeroSalle : int <<PK>>
+  - nom : String
+  - capacite : int
+
+  + Salle(numeroSalle : int, nom : String, capacite : int)
+  + getNumeroSalle() : int
+  + getNom() : String
+  + getCapacite() : int
+  + setNom(n : String) : void
+  + setCapacite(c : int) : void
+}
+
+class Séance {
+  - id_seance : int <<PK>>
+  - date : Date
+  - heure : Time
+  - langue : String
+
+  + Séance(id_seance : int, date : Date, heure : Time, langue : String)
+  + getIdSeance() : int
+  + getDate() : Date
+  + getHeure() : Time
+  + getLangue() : String
+  + setDate(d : Date) : void
+  + setHeure(h : Time) : void
+  + setLangue(l : String) : void
+}
+
+class Billet {
+  - numero_billet : String <<PK>>
+  - codeQR : String
+  - estValide : boolean
+
+  + Billet(numero_billet : String, codeQR : String, estValide : boolean)
+  + getNumeroBillet() : String
+  + getCodeQR() : String
+  + getEstValide() : boolean
+  + setCodeQR(c : String) : void
+  + setEstValide(v : boolean) : void
+}
+
+class Siège {
+  - numero_siege : String <<PK>>
+  - etat : String
+
+  + Siège(numero_siege : String, etat : String)
+  + getNumeroSiege() : String
+  + getEtat() : String
+  + setEtat(e : String) : void
+}
+
+class Notification {
+  - id_notification : int <<PK>>
+  - type : String
+  - dateEnvoi : Date
+
+  + Notification(id_notification : int, type : String, dateEnvoi : Date)
+  + getIdNotification() : int
+  + getType() : String
+  + getDateEnvoi() : Date
+  + setType(t : String) : void
+  + setDateEnvoi(d : Date) : void
+}
+
+' Relations entre les classes
+
+Cinema "1" o-- "0..*" Salle 
+Cinema "1" o-- "0..*" Film 
+Cinema "1" o-- "0..*" Séance 
+Cinema "1" o-- "0..*" Utilisateur 
+
+Salle "1" *-- "0..*" Siège : contient
+Salle "1" -- "0..*" Séance : aLieuDans
+
+Client "1" -- "0..*" Réservation
+Réservation -- "1" Film
+
+Client "1" -- "0..*" Paiement
+Paiement -- "1" Réservation
+
+Réservation --> "1..*" Billet : génère
+Réservation --> "1" Séance : concerne
+Billet --> "1" Client : estUtiliséPar
+Billet --> "1..*" Siège : contient
+
+Séance --> "1" Film : projette
+Client --> "0..*" Notification : reçoit
+Notification --> "0..1" Billet : envoie
+
+Administrateur --> "0..*" Film : gère
+Administrateur --> "0..*" Salle : gère
+Administrateur --> "0..*" Séance : programme
+
+@enduml

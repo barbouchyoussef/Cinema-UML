@@ -1,0 +1,47 @@
+@startuml
+actor Client
+
+participant InterfaceClient
+participant ControleurReservation
+participant ServiceReservation
+participant BaseDeDonnées
+participant ServicePaiement
+participant ServiceNotification
+
+Client -> InterfaceClient : sélectionner film, séance, sièges
+InterfaceClient -> ControleurReservation : envoyer infos réservation
+ControleurReservation -> ServiceReservation : créerRéservation(film, séance, sièges)
+
+alt Vérifications
+    ServiceReservation -> BaseDeDonnées : vérifier disponibilité sièges
+    BaseDeDonnées --> ServiceReservation : disponibilité OK
+    ServiceReservation -> BaseDeDonnées : vérifier validité séance
+    BaseDeDonnées --> ServiceReservation : séance à venir
+else Précondition non respectée
+    ServiceReservation --> ControleurReservation : erreur réservation
+    ControleurReservation --> InterfaceClient : afficher erreur
+    InterfaceClient --> Client : message d'échec
+    return
+end
+
+ServiceReservation -> BaseDeDonnées : enregistrer réservation
+BaseDeDonnées --> ServiceReservation : réservation enregistrée
+
+ServiceReservation -> BaseDeDonnées : marquer sièges réservés
+BaseDeDonnées --> ServiceReservation : confirmation
+
+ServiceReservation -> BaseDeDonnées : générer billets
+BaseDeDonnées --> ServiceReservation : billets générés
+
+ServiceReservation -> ServicePaiement : initier paiement
+ServicePaiement --> ServiceReservation : paiement lancé
+
+ServiceReservation -> ServiceNotification : créer notification
+ServiceNotification -> BaseDeDonnées : récupérer client
+BaseDeDonnées --> ServiceNotification : infos client
+ServiceNotification -> Client : envoyer notification
+
+ControleurReservation --> InterfaceClient : retour succès
+InterfaceClient --> Client : réservation confirmée
+
+@enduml

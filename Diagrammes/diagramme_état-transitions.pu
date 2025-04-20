@@ -1,0 +1,32 @@
+@startuml
+[*] --> EnConstruction : initier / creerReservation()
+
+EnConstruction : entry : initChamps()
+EnConstruction : exit : validerDonnees()
+
+EnConstruction --> EnAttentePaiement : confirmerCreation / générerRéférence()
+
+EnAttentePaiement : entry : notifierClient()
+EnAttentePaiement : do : attendrePaiement()
+EnAttentePaiement : exit : enregistrerPaiement()
+
+EnAttentePaiement --> Confirmée : paiementEffectue[montant > 0] / validerReservation()
+EnAttentePaiement --> Annulée : clientAnnule[statut == en_attente] / traiterAnnulation()
+EnAttentePaiement --> Expirée : delaiDepasse[délai > 15min] / expirerReservation()
+
+Confirmée : entry : genererBillet()
+Confirmée : exit : cloturer()
+
+Annulée : entry : notifierAnnulation()
+Annulée : exit : archiver()
+
+Expirée : entry : notifierExpiration()
+Expirée : exit : nettoyer()
+
+Confirmée --> EnDestruction : supprimerReservation / destroy()
+Annulée --> EnDestruction : supprimerReservation / destroy()
+Expirée --> EnDestruction : supprimerReservation / destroy()
+
+EnDestruction : entry : destructeur()
+EnDestruction --> [*]
+@enduml

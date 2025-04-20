@@ -1,0 +1,142 @@
+@startuml
+
+[*] --> EnConstruction : initier / creerReservation()
+
+EnConstruction : entry : initChamps()
+EnConstruction : exit : validerDonnees()
+
+EnConstruction --> EnAttentePaiement : confirmerCreation / générerRéférence()
+
+EnAttentePaiement : entry : notifierClient()
+EnAttentePaiement : do : attendrePaiement()
+EnAttentePaiement : exit : enregistrerPaiement()
+
+EnAttentePaiement --> Confirmée : paiementEffectue[montant > 0] / validerReservation()
+EnAttentePaiement --> Annulée : clientAnnule[statut == en_attente] / traiterAnnulation()
+EnAttentePaiement --> Expirée : delaiDepasse[délai > 15min] / expirerReservation()
+
+Confirmée : entry : genererBillet()
+Confirmée : exit : cloturer()
+
+Annulée : entry : notifierAnnulation()
+Annulée : exit : archiver()
+
+Expirée : entry : notifierExpiration()
+Expirée : exit : nettoyer()
+
+Confirmée --> EnDestruction : supprimerReservation / destroy()
+Annulée --> EnDestruction : supprimerReservation / destroy()
+Expirée --> EnDestruction : supprimerReservation / destroy()
+
+EnDestruction : entry : destructeur()
+EnDestruction --> [*]
+
+' ----------------------- Notes Algorithmiques -----------------------
+
+note left of EnConstruction
+// creerReservation() — point d’entrée initial
+creerReservation() {
+  this.initChamps();
+}
+
+// Initialisation des données
+initChamps() {
+  this.dateReservation = aujourdHui();
+  this.statut = "en_construction";
+}
+
+// Validation des champs obligatoires
+validerDonnees() {
+  return (film != null && seance != null && nbPlaces > 0);
+}
+end note
+
+note right of EnAttentePaiement
+// Génère une référence unique
+générerRéférence() {
+  this.reference = UUID.randomUUID();
+}
+
+// Notification client
+notifierClient() {
+  Notification.envoyer(client, "Votre réservation est en attente de paiement.");
+}
+
+// Boucle d’attente paiement
+attendrePaiement() {
+  while (!paiementEffectue && !delaiDepasse()) {
+    patienter();
+  }
+}
+
+// Paiement reçu → mise à jour
+enregistrerPaiement() {
+  paiement.setStatut("validé");
+  this.datePaiement = aujourdHui();
+}
+
+// Paiement OK → confirmer
+validerReservation() {
+  this.enregistrerPaiement();
+  this.genererBillet();
+  this.cloturer();
+}
+
+// Timeout de paiement
+expirerReservation() {
+  this.notifierExpiration();
+  this.nettoyer();
+}
+
+// Annulation manuelle par client
+traiterAnnulation() {
+  this.notifierAnnulation();
+  this.archiver();
+}
+end note
+
+note right of Confirmée
+// Génération du billet
+genererBillet() {
+  this.billet = new Billet(client, seance, sieges);
+}
+
+// Mise à jour finale
+cloturer() {
+  this.statut = "confirmée";
+}
+end note
+
+note right of Annulée
+// Avertir le client
+notifierAnnulation() {
+  Notification.envoyer(client, "Votre réservation a été annulée.");
+}
+
+// Sauvegarde historique
+archiver() {
+  Historique.ajouter(this);
+}
+end note
+
+note right of Expirée
+// Avertissement expiration
+notifierExpiration() {
+  Notification.envoyer(client, "Votre réservation a expiré.");
+}
+
+// Libération des sièges
+nettoyer() {
+  seance.libererSieges(this.sieges);
+}
+end note
+
+note right of EnDestruction
+// Suppression complète
+destructeur() {
+  BaseDeDonnées.supprimer(this);
+  Log.ajouter("Réservation supprimée.");
+}
+end note
+
+@enduml
