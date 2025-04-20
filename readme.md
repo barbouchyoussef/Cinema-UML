@@ -132,7 +132,7 @@ postconditions
 ---
 
 ### 1.b Diagramme de classes (raffiné)
-![Diagramme de classes](Diagrammes/diagramme_de_classe.png)
+![Diagramme de classes](Diagrammes/diagramme_de_classes.png)
 
 
 ## 2) Aspects dynamiques
