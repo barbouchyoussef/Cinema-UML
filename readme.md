@@ -207,6 +207,6 @@ postconditions
 6. Si tout est correct → reservation du film.
 7. Un message de confirmation est affiché au client.
 
-### Diagramme de séquence DSUC1
+### Diagramme de séquence DSUC2
 ![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2.png)
 
