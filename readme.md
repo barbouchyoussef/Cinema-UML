@@ -131,7 +131,7 @@ postconditions
 
 ---
 
-### 1.b Diagramme de classes (raffiné)
+### 1.b Diagramme de classes (initial)
 ![Diagramme de classes](Diagrammes/diagramme_de_classes.png)
 
 
@@ -339,6 +339,27 @@ Conformément aux règles de modélisation enseignées, nous avons raffiné notr
 
 ### Diagramme de séquence DSUC2
 ![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2(deuxième_raffinement).png)
+
+###  3.3.2 Traduction du diagramme d’états-transitions en algorithmes
+
+Conformément aux recommandations de modélisation, nous avons raffiné le **cycle de vie d'une réservation** à travers un **diagramme d’états-transitions** complet, puis traduit chaque **état** et **transition** en **méthodes algorithmiques** claires.
+
+#### États principaux de l'objet `Réservation`
+
+| État               | Description                                              |
+|--------------------|----------------------------------------------------------|
+| `EnConstruction`   | La réservation est en cours de saisie                   |
+| `EnAttentePaiement`| Réservation créée, en attente du paiement               |
+| `Confirmée`        | Paiement validé, billets générés                        |
+| `Annulée`          | Réservation annulée manuellement                        |
+| `Expirée`          | Réservation expirée faute de paiement dans le délai     |
+| `EnDestruction`    | Réservation supprimée, archivée                         |
+
+---
+## Diagramme d'états-transitions (deuxième raffinement)
+![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions(deuxième_raffinement).png)
+
+
 
 
 
