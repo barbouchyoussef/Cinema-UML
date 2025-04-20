@@ -1,0 +1,44 @@
+@startuml
+actor Administrateur
+participant "InterfaceAdmin" as UI
+participant "ContrôleurFilm" as Controller
+participant "ServiceFilm" as Service
+participant "BaseDeDonnées" as DB
+participant "ServiceNotification" as Notification
+participant "BaseUtilisateurs" as UsersDB
+
+Administrateur -> UI : saisir données film (titre, durée, genre, réalisateur, code)
+UI -> Controller : soumettre nouveau film
+Controller -> Service : valider et ajouter film
+
+alt Préconditions non respectées
+    Service -> Controller : erreur de validation (champ vide ou mal formé)
+    Controller -> UI : afficher message d'erreur
+    UI -> Administrateur : échec ajout film
+else Préconditions OK
+    Service -> DB : vérifier doublon (par code)
+    DB --> Service : film existant ? (false)
+
+    alt Film inexistant
+        Service -> DB : insérer film
+        DB --> Service : confirmation insertion
+
+        Service -> Notification : créer notification (nouveau film)
+        Notification -> UsersDB : récupérer tous les utilisateurs
+        UsersDB --> Notification : liste utilisateurs
+
+        loop pour chaque utilisateur
+            Notification -> UsersDB : enregistrer notification
+        end
+
+        Notification --> Service : notifications envoyées
+        Service -> Controller : succès ajout film
+        Controller -> UI : afficher message succès
+        UI -> Administrateur : film ajouté + notifications envoyées
+    else Film déjà existant
+        Service -> Controller : erreur : doublon
+        Controller -> UI : afficher message erreur
+        UI -> Administrateur : film non ajouté
+    end
+end
+@enduml

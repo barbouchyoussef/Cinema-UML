@@ -69,3 +69,73 @@ postcondition :
 | film avec ce code existant                     | F  | F  | F  | F  | T  |
 | nombre de tests dans le jeu de tests            | 2  | 2  | 2  | 1  | 1  |
 
+# Conception Préliminaire– Rendu 2
+
+
+**Date :** 10/04/2025  
+
+
+
+##  1) Aspects statiques
+
+### 1.a Liste des classes métier
+
+| Classe         | Attributs principaux                                | Remarques / Associations                                                             |
+|----------------|------------------------------------------------------|----------------------------------------------------------------------------------------|
+| **Cinéma**     | nom                                                  | Agrège les films, salles, séances, utilisateurs                                       |
+| **Utilisateur**| nom, prénom, email, motDePasse                      | Classe abstraite                                                                      |
+| **Client**     | id_client                                            | Hérite de Utilisateur                                                                 |
+| **Administrateur** | id_admin                                       | Hérite de Utilisateur et de Client                                                    |
+| **Film**       | id_film, titre, genre, durée, résumé                | Lié aux séances et géré par l'administrateur                                         |
+| **Réservation**| id_reservation, dateReservation, statut             | Liée au client, au film, à la séance, génère des billets                              |
+| **Paiement**   | id_paiement, montant, statut                        | Associé à une réservation                                                              |
+| **Salle**      | numeroSalle, nom, capacité                          | Contient des sièges, accueille des séances                                            |
+| **Séance**     | id_seance, date, heure, langue                      | Lie un film à une salle à une date donnée                                             |
+| **Billet**     | numero_billet, codeQR, estValide                    | Généré à partir d’une réservation, lié à un client                                    |
+| **Siège**      | numero_siege, état                                  | Associé à une salle et à un billet                                                     |
+| **Notification** | id_notification, type, dateEnvoi                 | Envoyée à un client, liée à un billet                                                 |
+
+---
+
+### 1.b Diagramme de classes
+![Diagramme de classes](Diagrammes/diagramme_de_classe.png)
+
+
+## 2) Aspects dynamiques
+
+### 2.a Diagramme de séquence – DSUC1 : Ajouter un film à la collection
+
+- **Nom du cas d’utilisation :** Ajouter un film à la collection  
+- **Acteur principal :** Administrateur  
+- **But :** Ajouter un film dans la base de données du cinéma  
+
+#### Préconditions :
+- Titre du film non nul et non vide  
+- Durée du film spécifiée (non nulle et non vide)  
+- Genre du film spécifié  
+- Nom du réalisateur spécifié  
+- Le code du film n’existe pas déjà dans la base  
+
+#### Postconditions :
+- Le film est enregistré  
+- Une notification est envoyée à tous les utilisateurs  
+
+
+
+### Algorithme en langage naturel
+
+1. L’administrateur saisit les données du film via l’interface.  
+2. Le contrôleur les transmet au service.  
+3. Le service valide les préconditions.  
+4. Si l’une des conditions n’est pas remplie → échec avec message.  
+5. Si tout est OK → on vérifie l’unicité du code.  
+6. Si le code existe déjà → échec avec message.  
+7. Sinon → on insère le film.  
+8. Ensuite → une notification est générée et envoyée à tous les utilisateurs.
+
+
+
+### Diagramme de séquence DSUC1
+![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1.png)
+
+
