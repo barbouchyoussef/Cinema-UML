@@ -1,5 +1,8 @@
 # 🎟️ Online Cinema Ticketing System (Multi-Hall) – UML Project
 
+[![Language](https://img.shields.io/badge/language-UML-blue)](https://www.uml.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Project Status](https://img.shields.io/badge/status-Design%20&%20Specification-orange)]()
 **Authors:**  
 - Mohamed Yassine Abdi  
 - Youssef Barbouch  
@@ -12,6 +15,25 @@
 ## 📌 Project Introduction
 This project aims to develop an **online cinema ticketing platform** for multi-hall cinemas. The system allows users to book tickets and manage reservations easily, reducing queues and optimizing cinema session management.  
 It covers **movie, hall, session management**, and **secure online payments**. The project highlights **UML modeling**, object-oriented design, and system analysis skills.
+
+---
+## 🛠️ Tools and Methodologies Used
+- **UML Diagrams:** Use Case, Class, Sequence, and State diagrams  
+- **Project Specification & Design Techniques:**  
+  - Requirements analysis  
+  - Decision tables  
+  - Object lifecycle modeling  
+  - Sequence-to-algorithm translation  
+- **Software Modeling Approach:**  
+  - Object-Oriented Analysis and Design (OOAD)  
+  - Refinement of UML diagrams to align with programming structures  
+  - Aggregation, Composition, and Associations implemented conceptually  
+- **Technologies Referenced:**  
+  - Conceptual Java classes for entities  
+  - Mockup of GUI workflows (Java Swing referenced in design)  
+  - Database schema considerations (MySQL)
+
+This project is **educational**, focusing on system specification and design rather than full implementation.
 
 ---
 
