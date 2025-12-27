@@ -1,367 +1,180 @@
-# Billetterie en ligne cinéma à plusieurs salles
+# 🎟️ Online Cinema Ticketing System (Multi-Hall) – UML Project
 
-**Auteurs :**
+**Authors:**  
 - Mohamed Yassine Abdi  
 - Youssef Barbouch  
 - Mohamed Ali Ben Alaya  
 
-**Date :** 02/04/2025
-
-## Introduction au projet
-Ce projet vise à développer une plateforme de billetterie en ligne permettant aux spectateurs de réserver et d’acheter leurs billets facilement, réduisant ainsi les files d’attente et optimisant la gestion des séances. Il inclut la gestion des films, des salles, des réservations et des paiements en ligne sécurisés.  
-Nous avons choisi ce projet pour son utilité dans la digitalisation du secteur du divertissement, son potentiel évolutif, et les compétences techniques qu’il permet de développer en gestion de bases de données, UX/UI et paiement en ligne. C'est une opportunité d’apprentissage enrichissante et applicable à d’autres événements culturels.
-
-## Spécification du projet
-Le projet consiste en la mise en place d’une billetterie en ligne pour un cinéma multisalles. Il doit offrir une expérience utilisateur fluide et intuitive, permettant aux clients de réserver leurs billets facilement et aux administrateurs de gérer les films, salles et réservations efficacement.
-
-### Contraintes du projet :
-- **Accessibilité et ergonomie :** Interface responsive accessible sur ordinateur et mobile.
-- **Sécurité :** Paiements sécurisés et protection des données utilisateur.
-- **Disponibilité en temps réel :** Gestion dynamique des places et des séances.
-- **Notifications :** Système d’alerte pour confirmer les réservations et rappeler les séances.
-
-## Acteurs et fonctionnalités
-
-### 1. Client (Utilisateur principal du service)
-- Créer un compte et s'authentifier pour accéder à l’espace personnel.
-- Rechercher un film et afficher la liste des films avec filtres (durée, genre, etc.).
-- Réserver une place en sélectionnant la salle, la séance, le nombre de places et les sièges.
-- Effectuer un paiement sécurisé par carte bancaire.
-- Annuler une réservation en cas d’imprévu.
-- Ajouter un film à une liste "À voir" pour le retrouver facilement plus tard.
-
-### 2. Administrateur (Gestionnaire du cinéma)
-- Ajouter, affecter ou supprimer un film d’une salle selon la programmation.
-- Ajouter ou supprimer une salle pour gérer la capacité du cinéma.
-- Gérer les places en les marquant comme réservées ou disponibles en cas d’annulation.
-
-### 3. Système de paiement (Traitement des transactions)
-- Traiter les paiements et assurer la validation des transactions.
-- Gérer les remboursements en cas d’annulation.
-
-### 4. Système de notification (Communication avec les utilisateurs)
-- Notifier l’utilisateur par email lors de la confirmation d’une réservation.
-- Envoyer des rappels de séance avant l’horaire prévu.
-
-## Diagrammes de cas d’utilisation
-![Cas d'utilisation](Diagrammes/Diagramme_de_cas_d'utilisation.png)
-
-### Priorités des cas d’utilisation
-Nous avons choisi les cas d'utilisation "Ajouter un film à la collection" (fonctionnalité principale de l'administrateur) et "Réserver un film" (fonctionnalité principale du client) pour le sprint 1 car ils constituent les fonctionnalités de base nécessaires pour gérer et structurer efficacement les films dans le système.
-
-# Table de décision – Ajouter un film à la collection
-précondition :
-^ titre du film bien formé (non nul ^ non vide)
-^ durée bien spécifiée (non nulle ^ non vide)
-^ genre spécifié (non nul ^ non vide)
-^ nom  réalisateur bien spécifié (non nul ^ non vide)
-^ film avec ce code inexistant dans la collection
-postcondition :
-^ film avec ce code existant 
-
-|                                                 | 1  | 2  | 3  | 4  | 5  |
-|-------------------------------------------------|----|----|----|----|----|
-| titre du film bien formé (non nul ^ non vide)   | F  | T  | T  | T  | T  |
-| durée bien spécifiée (non nulle ^ non vide)     |    | F  | T  | T  | T  |
-| genre spécifié (non nul ^ non vide)             |    |    | F  | T  | T  |
-| nom  réalisateur bien spécifié (non nul ^ non vide)  |    |    |    | F  | T  |
-| film avec ce code inexistant dans la collection |    |    |    |    | T  |
-| film avec ce code existant                     | F  | F  | F  | F  | T  |
-| nombre de tests dans le jeu de tests            | 2  | 2  | 2  | 1  | 1  |
-
-
-###  Table de décision – Réserver un film
-
-préconditions
-
-^ Le client est authentifié.  
-^ Le film sélectionné existe et est bien programmé.  
-^ La séance choisie est encore à venir.  
-^ Il reste des places disponibles pour la séance.
-
-postconditions
-
-^ La réservation est enregistrée dans le système.  
-^ Les sièges sont marqués comme réservés.  
-^ Un ou plusieurs billets sont générés.  
-^ Une notification est envoyée au client.  
-^ Le paiement est déclenché ou prêt à être effectué.
-
-
-
-|                                                           | 1  | 2  | 3  | 4  | 5  |
-|-----------------------------------------------------------|----|----|----|----|----|
-| Le client est authentifié                                 | F  | T  | T  | T  | T  |
-| Le film existe et est programmé                           | —  | F  | T  | T  | T  |
-| La séance est à venir                                     | —  | —  | F  | T  | T  |
-| Des places sont disponibles                               | —  | —  | —  | F  | T  |
-| **Réservation enregistrée**                               | F  | F  | F  | F  | T  |
-| **Sièges réservés**                                       | F  | F  | F  | F  | T  |
-| **Billets générés**                                       | F  | F  | F  | F  | T  |
-| **Notification envoyée au client**                        | F  | F  | F  | F  | T  |
-| **Paiement déclenché ou prêt à être effectué**            | F  | F  | F  | F  | T  |
-| **Nombre de tests dans le jeu de tests**                  | 2  | 2  | 2  | 2  | 1  |
-
-
-# Conception Préliminaire– Rendu 2
-
-
-**Date :** 10/04/2025  
-
-
-
-##  1) Aspects statiques
-
-### 1.a Liste des classes métier
-
-| Classe         | Attributs principaux                                | Remarques / Associations                                                             |
-|----------------|------------------------------------------------------|----------------------------------------------------------------------------------------|
-| **Cinéma**     | nom                                                  | Agrège les films, salles, séances, utilisateurs                                       |
-| **Utilisateur**| nom, prénom, email, motDePasse                      | Classe abstraite                                                                      |
-| **Client**     | id_client                                            | Hérite de Utilisateur                                                                 |
-| **Administrateur** | id_admin                                       | Hérite de Utilisateur et de Client                                                    |
-| **Film**       | id_film, titre, genre, durée, résumé                | Lié aux séances et géré par l'administrateur                                         |
-| **Réservation**| id_reservation, dateReservation, statut             | Liée au client, au film, à la séance, génère des billets                              |
-| **Paiement**   | id_paiement, montant, statut                        | Associé à une réservation                                                              |
-| **Salle**      | numeroSalle, nom, capacité                          | Contient des sièges, accueille des séances                                            |
-| **Séance**     | id_seance, date, heure, langue                      | Lie un film à une salle à une date donnée                                             |
-| **Billet**     | numero_billet, codeQR, estValide                    | Généré à partir d’une réservation, lié à un client                                    |
-| **Siège**      | numero_siege, état                                  | Associé à une salle et à un billet                                                     |
-| **Notification** | id_notification, type, dateEnvoi                 | Envoyée à un client, liée à un billet                                                 |
+**Date:** 02/04/2025
 
 ---
 
-### 1.b Diagramme de classes (initial)
-![Diagramme de classes](Diagrammes/diagramme_de_classes.png)
-
-
-## 2) Aspects dynamiques
-
-### 2.a Diagramme de séquence – DSUC1 : Ajouter un film à la collection
-
-- **Nom du cas d’utilisation :** Ajouter un film à la collection  
-- **Acteur principal :** Administrateur  
-- **But :** Ajouter un film dans la base de données du cinéma  
-
-#### Préconditions :
-- Titre du film non nul et non vide  
-- Durée du film spécifiée (non nulle et non vide)  
-- Genre du film spécifié  
-- Nom du réalisateur spécifié  
-- Le code du film n’existe pas déjà dans la base  
-
-#### Postconditions :
-- Le film est enregistré  
-- Une notification est envoyée à tous les utilisateurs  
-
-
-
-### Algorithme en langage naturel
-
-1. L’administrateur saisit les données du film via l’interface.  
-2. Le contrôleur les transmet au service.  
-3. Le service valide les préconditions.  
-4. Si l’une des conditions n’est pas remplie → échec avec message.  
-5. Si tout est OK → on vérifie l’unicité du code.  
-6. Si le code existe déjà → échec avec message.  
-7. Sinon → on insère le film.  
-8. Ensuite → une notification est générée et envoyée à tous les utilisateurs.
-
-
-
-### Diagramme de séquence DSUC1
-![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1.png)
-
-
-
-### 2.b Diagramme de séquence – DSUC2 : Réserver un film
-
-- **Nom du cas d’utilisation :** Réserver un film  
-- **Acteur principal :** Client  
-- **But :** Permettre au client de réserver une ou plusieurs places pour une séance de film
-
-####  Préconditions :
-
-- Le client est authentifié.
-- Le film sélectionné existe et est bien programmé.
-- La séance choisie est encore à venir.
-- Il reste des places disponibles pour la séance.
-
-####  Postconditions :
-
-- La réservation est enregistrée dans le système.
-- Les sièges sont marqués comme réservés.
-- Un ou plusieurs billets sont générés.
-- Une notification est envoyée au client.
-- Le paiement est déclenché ou prêt à être effectué.
+## 📌 Project Introduction
+This project aims to develop an **online cinema ticketing platform** for multi-hall cinemas. The system allows users to book tickets and manage reservations easily, reducing queues and optimizing cinema session management.  
+It covers **movie, hall, session management**, and **secure online payments**. The project highlights **UML modeling**, object-oriented design, and system analysis skills.
 
 ---
 
-###  Algorithme en langage naturel
+## 📝 Project Specification
+The system must provide:
 
-1. Le client sélectionne un film, une séance et les sièges souhaités.
-2. L’interface transmet les informations au contrôleur.
-3. Le contrôleur transmet les données au service de réservation.
-4. Le service vérifie les préconditions 
-5. Si une précondition n’est pas respectée → échec avec message d’erreur.
-6. Si tout est correct → reservation du film.
-7. Un message de confirmation est affiché au client.
-
-### Diagramme de séquence DSUC2
-![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2.png)
-
-
-# Conception Préliminaire– Rendu 3
-
-
-**Date :** 18/04/2025  
-
-## 1 Diagramme de classes (premier raffinement) 
-![Diagramme de classes](Diagrammes/diagramme_de_classes(premier_raffinnement).png)
-
-## 2. Cycle de vie des objets : Diagramme d'états-transitions (`Réservation`)
-
-Dans cette section, nous avons modélisé le cycle de vie des objets de la classe `Réservation` à l'aide d'un **diagramme de machines à états (aussi appelé diagramme états-transitions)**.
-
-Ce diagramme représente les différentes **étapes d’évolution** d’une réservation, de sa création à sa suppression, en passant par des états comme la confirmation ou l’annulation.
-
-###  Objectif
-
-Représenter de manière claire le comportement dynamique d’un objet `Réservation`, en précisant :
-- Les **états** qu’il peut prendre
-- Les **événements** déclencheurs
-- Les **conditions** nécessaires pour effectuer une transition
-- Les **actions** déclenchées lors des transitions ou à l’entrée/sortie des états
-
-###  États modélisés
-
-- `EnConstruction` : l’objet est instancié mais pas encore complet
-- `EnAttentePaiement` : la réservation est en attente d’un paiement
-- `Confirmée` : la réservation est validée après paiement
-- `Annulée` : la réservation a été annulée par le client ou le système
-- `Expirée` : délai de paiement dépassé
-- `EnDestruction` : état final avant la suppression de l’objet
-
-###  Transitions clés
-
-- `initier` : commence la création d’une réservation
-- `confirmerCreation` : finalise l’étape de création
-- `paiementEffectue` : confirme la réservation si paiement accepté
-- `clientAnnule` : déclenche l’annulation si la réservation est encore en attente
-- `delaiDepasse` : déclenche une expiration automatique après un certain temps
-- `supprimerReservation` : transition vers la destruction de l’objet
-
-![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions.png)
-
- ### 3. 2ème raffinement 
-### 3.1 Traduire les associations en attributs dans les classes concernées 
-
-Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les associations sous forme d’attributs, afin de faciliter la programmation orientée objet.
-
-####  Principes appliqués :
-
-- **Association unidirectionnelle** : l’attribut est placé uniquement du **côté de la flèche**, vers la classe cible.
-- **Association binaire (1:1 ou 1:N)** : traduite par **un seul attribut** dans la classe source.
-- Le **nom de l’attribut** correspond à celui du rôle ou à la **forme nominale** du nom de l’association.
-- La **multiplicité** est traduite par :
-  - `1` → un objet de type `Classe`
-  - `0..N` ou `*` → une **collection** de type `List<Classe>` ou `Set<Classe>`
-
-####  Exemples concrets dans notre projet (selon le modèle UML final) :
-
-| Classe source      | Association                                | Attribut ajouté                                     |
-|--------------------|---------------------------------------------|-----------------------------------------------------|
-| `Cinema`           | `0..*` Salle                                | `- salles : List<Salle>`                            |
-| `Cinema`           | `0..*` Film                                 | `- films : List<Film>`                              |
-| `Cinema`           | `0..*` Séance                               | `- seances : List<Séance>`                          |
-| `Cinema`           | `0..*` Utilisateur                          | `- utilisateurs : List<Utilisateur>`                |
-| `Client`           | `0..*` Réservation                          | `- reservations : List<Reservation>`                |
-| `Client`           | `0..*` Paiement                             | `- paiements : List<Paiement>`                      |
-| `Client`           | `0..*` Notification                         | `- notifications : List<Notification>`              |
-| `Administrateur`   | `0..*` Film                                 | `- filmsGeres : List<Film>`                         |
-| `Administrateur`   | `0..*` Salle                                | `- sallesGerees : List<Salle>`                      |
-| `Administrateur`   | `0..*` Séance                               | `- seancesProgrammees : List<Séance>`               |
-| `Réservation`      | `1` Film                                    | `- film : Film`                                     |
-| `Réservation`      | `1` Séance                                  | `- seance : Séance`                                 |
-| `Réservation`      | `1..*` Billet                               | `- billets : List<Billet>`                          |
-| `Paiement`         | `1` Réservation                             | `- reservation : Réservation`                       |
-| `Salle`            | `0..*` Siège                                | `- sieges : List<Siège>`                            |
-| `Salle`            | `0..*` Séance                               | `- seances : List<Séance>`                          |
-| `Séance`           | `1` Film                                    | `- film : Film`                                     |
-| `Séance`           | `1` Salle                                   | `- salle : Salle`                                   |
-| `Billet`           | `1` Client                                  | `- client : Client`                                 |
-| `Billet`           | `1..*` Siège                                | `- sieges : List<Siège>`                            |
-| `Notification`     | `0..1` Billet                               | `- billet : Billet`                                 |
-
-####  Choix des structures de données :
-
-Pour les collections (`0..*`), nous avons utilisé principalement :
-- `List<...>` quand l’ordre est important (ex : billets, notifications)
-- `Set<...>` pourrait être utilisé si l’unicité est nécessaire (optionnel ici)
-
-Ce raffinement permet d’intégrer facilement ces relations dans le code orienté objet, tout en respectant la logique du système métier.
-### 3.2 Traduction des agrégations / compositions
-
-Conformément aux règles de modélisation enseignées, nous avons raffiné notre diagramme de classes en traduisant les agrégations et compositions en attributs, tout en tenant compte du **cycle de vie des objets composés**.
-
-#### Distinction :
-
-- **Agrégation** : simple association « fait partie de » sans lien de vie fort
-- **Composition** : le composant **n’existe pas sans son conteneur**, et il est **créé/détruit avec lui**
-
-#### Règles appliquées :
-
-- Même traduction qu’une association simple (→ attribut)
-- Mais avec une **gestion stricte du cycle de vie**
-  - Le composant est **créé dans le constructeur**
-  - Et **détruit automatiquement avec l’objet parent**
-
-#### Exemples dans notre projet :
-
-| Classe composante | Classe propriétaire     | Relation    | Traduction en attribut + remarque                    |
-|-------------------|--------------------------|-------------|------------------------------------------------------|
-| `Siège`           | `Salle`                  | Composition `*--` | `- sieges : List<Siège>` → les sièges sont créés avec la salle et détruits avec elle |
-| `Salle`           | `Cinema`                 | Composition `*--` | `- salles : List<Salle>` → une salle n’existe que dans un cinéma |
-| `Séance`          | `Cinema`                 | Composition `*--` | `- seances : List<Séance>` → les séances sont gérées localement par un cinéma |
-| `Utilisateur`     | `Cinema`                 | Composition `*--` | `- utilisateurs : List<Utilisateur>` → tous les utilisateurs appartiennent à un cinéma |
-
-
-
-
-##  Diagramme de classes (deuxième raffinement) 
-
-![Diagramme de classes](Diagrammes/diagramme_de_classe(deuxième_raffinnement).png)
-
-### 3.3.1 Traduction du diagramme de séquence en algorithmes
-
-### Diagramme de séquence DSUC1
-![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC1(deuxième_raffinement).png)
-
-### Diagramme de séquence DSUC2
-![Diagramme de séquence : Ajouter un film à la collection](Diagrammes/DSUC2(deuxième_raffinement).png)
-
-###  3.3.2 Traduction du diagramme d’états-transitions en algorithmes
-
-Conformément aux recommandations de modélisation, nous avons raffiné le **cycle de vie d'une réservation** à travers un **diagramme d’états-transitions** complet, puis traduit chaque **état** et **transition** en **méthodes algorithmiques** claires.
-
-#### États principaux de l'objet `Réservation`
-
-| État               | Description                                              |
-|--------------------|----------------------------------------------------------|
-| `EnConstruction`   | La réservation est en cours de saisie                   |
-| `EnAttentePaiement`| Réservation créée, en attente du paiement               |
-| `Confirmée`        | Paiement validé, billets générés                        |
-| `Annulée`          | Réservation annulée manuellement                        |
-| `Expirée`          | Réservation expirée faute de paiement dans le délai     |
-| `EnDestruction`    | Réservation supprimée, archivée                         |
+- **User-friendly experience:** intuitive interface for customers to book tickets.  
+- **Admin functionalities:** manage movies, halls, and sessions.  
+- **Real-time seat availability:** dynamic updates for reservations.  
+- **Secure transactions:** safe online payments.  
+- **Notifications:** email confirmation and reminders for sessions.
 
 ---
-## Diagramme d'états-transitions (deuxième raffinement)
-![Diagramme d'état Réservation](Diagrammes/diagramme_état-transitions(deuxième_raffinement).png)
 
+## 👥 Actors & Features
 
+### 1. Customer
+- Create an account and log in.  
+- Browse and search movies with filters (genre, duration, etc.).  
+- Book seats for a selected session (choose hall, number of seats, and seat positions).  
+- Make secure online payments.  
+- Cancel reservations.  
+- Add movies to a personal "Watchlist".
 
+### 2. Administrator
+- Add, assign, or remove movies from halls according to schedules.  
+- Manage halls (add/remove) and seating capacity.  
+- Update seat availability after reservations or cancellations.
 
+### 3. Payment System
+- Process payments and validate transactions.  
+- Handle refunds in case of cancellation.
 
+### 4. Notification System
+- Send confirmation emails to users.  
+- Send reminders before movie sessions.
 
+---
 
+## 📊 Use Case Diagram
+![Use Case Diagram](Diagrammes/Diagramme_de_cas_d'utilisation.png)
+
+**Prioritized Use Cases for Sprint 1:**  
+- "Add a Movie to the Collection" – main admin functionality  
+- "Book a Movie" – main customer functionality  
+
+---
+
+## 📑 Decision Tables
+
+### Add a Movie to the Collection
+
+**Preconditions:**  
+- Movie title is valid (not null/empty)  
+- Duration is specified  
+- Genre is specified  
+- Director is specified  
+- Movie code is unique  
+
+**Postconditions:**  
+- Movie is successfully added  
+
+| Feature / Condition                       | 1  | 2  | 3  | 4  | 5  |
+|-------------------------------------------|----|----|----|----|----|
+| Title valid                               | F  | T  | T  | T  | T  |
+| Duration specified                         |    | F  | T  | T  | T  |
+| Genre specified                            |    |    | F  | T  | T  |
+| Director specified                         |    |    |    | F  | T  |
+| Movie code unique                          |    |    |    |    | T  |
+| Movie added                                | F  | F  | F  | F  | T  |
+
+---
+
+### Book a Movie
+
+**Preconditions:**  
+- Customer is authenticated  
+- Selected movie exists and is scheduled  
+- Chosen session is upcoming  
+- Seats are available  
+
+**Postconditions:**  
+- Reservation is recorded  
+- Seats marked as reserved  
+- Tickets generated  
+- Notification sent to customer  
+- Payment initiated or ready  
+
+| Feature / Condition                       | 1  | 2  | 3  | 4  | 5  |
+|-------------------------------------------|----|----|----|----|----|
+| Customer authenticated                     | F  | T  | T  | T  | T  |
+| Movie exists and scheduled                 | —  | F  | T  | T  | T  |
+| Session is upcoming                        | —  | —  | F  | T  | T  |
+| Seats available                            | —  | —  | —  | F  | T  |
+| Reservation recorded                        | F  | F  | F  | F  | T  |
+| Seats reserved                             | F  | F  | F  | F  | T  |
+| Tickets generated                           | F  | F  | F  | F  | T  |
+| Notification sent                           | F  | F  | F  | F  | T  |
+| Payment initiated or ready                  | F  | F  | F  | F  | T  |
+
+---
+
+## 🏗️ Preliminary Design
+
+### 1. Class List
+
+| Class               | Main Attributes                                | Notes / Associations                                      |
+|--------------------|-----------------------------------------------|-----------------------------------------------------------|
+| Cinema              | name                                          | Aggregates movies, halls, sessions, users               |
+| User                | name, surname, email, password                | Abstract class                                           |
+| Customer            | id_client                                     | Inherits User                                            |
+| Administrator       | id_admin                                      | Inherits User and Customer                               |
+| Movie               | id_movie, title, genre, duration, summary    | Linked to sessions, managed by Admin                    |
+| Reservation         | id_reservation, date, status                  | Linked to Customer, Movie, Session, generates Tickets   |
+| Payment             | id_payment, amount, status                     | Linked to Reservation                                    |
+| Hall                | hall_number, name, capacity                    | Contains Seats                                           |
+| Session             | id_session, date, time, language              | Links Movie and Hall                                     |
+| Ticket              | ticket_number, QR_code, isValid               | Generated from Reservation, linked to Customer          |
+| Seat                | seat_number, status                            | Linked to Hall and Ticket                                |
+| Notification        | id_notification, type, sentDate               | Linked to Ticket                                         |
+
+### Class Diagram (Initial)
+![Class Diagram](Diagrammes/diagramme_de_classes.png)
+
+---
+
+## 🔄 Sequence Diagrams
+
+### DSUC1: Add a Movie
+![Sequence DSUC1](Diagrammes/DSUC1.png)
+
+### DSUC2: Book a Movie
+![Sequence DSUC2](Diagrammes/DSUC2.png)
+
+---
+
+## 🟢 State Diagrams
+
+### Reservation Life Cycle
+![Reservation State Diagram](Diagrammes/diagramme_état-transitions.png)
+
+**States:**  
+- InConstruction  
+- PendingPayment  
+- Confirmed  
+- Cancelled  
+- Expired  
+- Destroyed  
+
+---
+
+## 💻 UML Refinements
+
+- Associations translated into class attributes (`1..*` → `List<...>`).  
+- Aggregation and composition applied with object lifecycle in mind.  
+- Sequence and state diagrams translated into natural-language algorithms.
+
+### Refined Class Diagram
+![Refined Class Diagram](Diagrammes/diagramme_de_classe(deuxième_raffinnement).png)
+
+### Refined Sequence Diagrams
+- DSUC1: ![DSUC1 Refined](Diagrammes/DSUC1(deuxième_raffinement).png)  
+- DSUC2: ![DSUC2 Refined](Diagrammes/DSUC2(deuxième_raffinement).png)
+
+### Refined State Diagram
+![Refined State Diagram](Diagrammes/diagramme_état-transitions(deuxième_raffinement).png)
